@@ -1,0 +1,101 @@
+gateway ::
+server.port=9012
+spring.application.name=apigateway
+spring.cloud.gateway.mvc.discovery.locator.enabled=true
+spring.cloud.gateway.mvc.discovery.locator.lower-case-service-id=true
+eureka.client.registerWithEureka=true
+eureka.client.fetchRegistry=true
+eureka.client.should-unregister-on-shutdown=true
+eureka.client.registry-fetch-interval-seconds=2
+eureka.client.initial-instance-info-replication-interval-seconds=2
+eureka.client.instance-info-replication-interval-seconds=2
+eureka.client.refresh.enable=true
+eureka.client.instance.preferIPAddress=true
+eureka.instance.lease-renewal-interval-in-seconds=2
+eureka.instance.lease-expiration-duration-in-seconds=2
+eureka.server.peer-node-read-timeout-ms=7000
+eureka.server.waitTimeInMsWhenSyncEmpty=0
+eureka.server.response-cache-auto-expiration-in-seconds=3
+
+ribbon.serverListRefreshInterval=1000
+ribbon.ConnectTimeout=86400000
+ribbon.ReadTimeout=86400000
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds=345600000
+
+#zuul.ignored-services=*
+#zuul.retryable=true
+
+management.endpoints.gateway.enabled=true
+management.endpoints.web.exposure.include=gateway,health
+
+spring.cloud.gateway.mvc.http-client.type=autodetect
+
+spring.cloud.gateway.mvc.routes[0].id=auth
+spring.cloud.gateway.mvc.routes[0].uri=http://localhost:9012
+spring.cloud.gateway.mvc.routes[0].predicates[0]=Path=/sso/**
+spring.cloud.gateway.mvc.routes[0].filters[0]=RewritePath=/sso/(?<segment>.*),/auth/sso/${segment}
+
+spring.cloud.gateway.mvc.routes[1].id=lib
+spring.cloud.gateway.mvc.routes[1].uri=http://localhost:9012
+
+discovery::
+
+server.port=9012
+spring.application.name=discovery
+eureka.instance.appname=discovery
+dashboard.eureka.port=9015
+eureka.instance.leaseRenewalIntervalInSeconds=3
+eureka.instance.registryFetchIntervalSeconds=30
+eureka.instance.leaseExpirationDurationInSeconds= 1
+eureka.instance.lease-renewal-interval-in-seconds=2
+eureka.instance.lease-expiration-duration-in-seconds=2
+eureka.server.response-cache-auto-expiration-in-seconds=3
+eureka.server.eviction-interval-timer-in-ms=25000
+eureka.server.enableSelfPreservation=false
+eureka.server.peer-node-read-timeout-ms=5000
+eureka.server.response-cache-update-interval-ms=2
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+eureka.client.instance.preferIPAddress=true
+eureka.dashboard.enabled=true
+
+spring.freemarker.template-loader-path=classpath:/templates/
+spring.freemarker.prefer-file-system-access=false
+
+spring.mvc.view.prefix=/WEB-INF/view/
+spring.mvc.view.suffix=.jsp
+
+
+app.prop::
+
+server.port=9012
+eureka.instance.hostname=localhost
+eureka.client.service-url.defaultZone=http://localhost:9012/discovery/eureka
+#ribbon.IsSecure=true
+eureka.instance.secureVirtualHostName=${spring.application.name}
+
+eureka.client.registerWithEureka=true
+eureka.client.fetchRegistry=true
+
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
+
+
+logging.level.com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver=WARN
+logging.level.com.netflix.eureka.registry.AbstractInstanceRegistry=WARN
+
+
+
+serer xml::
+
+   <Connector port="9012" protocol="HTTP/1.1"
+    Server=" "  maxHeaderCount="500"    useIPVHosts="true" connectionTimeout="20000" maxParameterCount="200000" maxPostSize="2147483647" maxHttpHeaderSize="50240" redirectPort="9013" />
+ 
+
+    <Connector port="9014" protocol="AJP/1.3" Server=" " address="localhost" maxThreads="700" redirectPort="9013" secretRequired="false" />
+
+setenv::
+
+set JAVA_HOME=%homedrive%%homepath%\softwares\java-17-openjdk-17.0.8.0.7-1.win.x86_64\bin
+set JRE_HOME=%homedrive%%homepath%\softwares\java-17-openjdk-17.0.8.0.7-1.win.x86_64\
+set spring_config_location=%CATALINA_HOME%\conf\application.properties
