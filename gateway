@@ -99,3 +99,105 @@ setenv::
 set JAVA_HOME=%homedrive%%homepath%\softwares\java-17-openjdk-17.0.8.0.7-1.win.x86_64\bin
 set JRE_HOME=%homedrive%%homepath%\softwares\java-17-openjdk-17.0.8.0.7-1.win.x86_64\
 set spring_config_location=%CATALINA_HOME%\conf\application.properties
+
+
+------------------------------------------------------------------------------------------------------------------------------
+
+BSP:
+
+application.properties::
+
+server.port=9022
+spring.datasource.jndi-name=java:comp/env/jdbc/credx
+spring.servlet.multipart.max-file-size=100MB
+spring.servlet.multipart.max-request-size=100MB
+
+logging.pattern.console=%d [%t] %-5level [%X{appName}/%X{userid}] %c{1.} %m%n
+logging.level.com.netflix.discovery.shared.resolver.aws.ConfigClusterResolver=WARN
+logging.level.com.netflix.eureka.registry.AbstractInstanceRegistry=WARN
+
+eureka.client.service-url.defaultZone=http://localhost:9012/discovery/eureka
+eureka.client.registerWithEureka=true
+eureka.client.fetchRegistry=true
+eureka.client.should-unregister-on-shutdown=true
+eureka.client.registry-fetch-interval-seconds=2
+eureka.client.initial-instance-info-replication-interval-seconds=2
+eureka.client.instance-info-replication-interval-seconds=2 
+eureka.client.refresh.enable=true
+eureka.client.instance.preferIPAddress=true
+eureka.instance.lease-renewal-interval-in-seconds=2
+eureka.instance.lease-expiration-duration-in-seconds=2
+eureka.server.peer-node-read-timeout-ms=7000
+eureka.server.waitTimeInMsWhenSyncEmpty=0
+eureka.server.response-cache-auto-expiration-in-seconds=3
+eureka.instance.hostname=localhost
+eureka.client.enabled=true
+
+mail.smtp.host=localhost
+mail.smtp.port=2500
+mail.smtp.auth=true
+mail.smtp.username=test
+mail.smtp.password=test
+mail.smtp.starttls.enable=true
+
+feign.client.config.default.connectTimeout=30000
+feign.client.config.default.readTimeout=30000
+
+credx.jwt.expireDuration=1200
+credx.jwt.publicKeyLocation=C:/Users/1647765/servers/tomcat_bsp/conf/public.key
+credx.jwt.internalApiKey=eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJob3N0IjoiMTI3LjAuMC4xIiwiZXhwIjoxOTk4NzIzOTQ0LCJpYXQiOjE2ODMxOTExNDQsImp0aSI6ImNmMzU5Y2IxYzk1MjRhMmM5NzI1NWEyNjM0M2JlMmE3IiwidXNlcm5hbWUiOiJidXNpbmVzc3Byb2Nlc3MifQ.TxnxUdSZKPjyDz-NRh0psU-XqdYCT2KqWvFXpawWnHGYtcNRERUVYuYlilkZljU6SsxKyvPkSsgnagjS_cwFryPawyF96KTIEHY_4p_QdKmNKvb8RpHTjwvhYmXXxTi3shFFE4K3-e0QCOyDxp8U6alo8mQ3yIxaRpYZhRz8dLlaOmYwL4iERwyl80RhZ_X0QYSoNNAhoep2ppb4CABddrpQovyo2cGq9q1S_qsHMLGo8KOFP3Kc6QFiA_wNnuAPFRww2ygcEy2DFGIFlV0bzHpE61coKaeCfN1vcS6Wzj0q9gxlFmd-LbpDQuHDCruYcNPi1i_5kd2hORX5wF5p9wS88HBlwVle6hB70vLpEk_dTTEbAUK8S8YsKqW2Obb-Jshopi3fB6z20EVlEFvKuIjkUwPCIMmJGHzo5YyMgvvWuj5DQRrMqsLLKyTWTQGlhTXoFtpgj7vBuyWFDGjvU-VL3rurA6byb6mCa6YfLDriwSmX4Y8KqMwewnB407i7Vgx1PedM8i_rnV9oiBwk3yaN9pvdRpMGBG6zsEeCXxRqrtSr_ITQyoQhfnDIqhFJm0Jg3jSM8iK65M-Rcj0q-JPrIxNrXvmdlPI7vXmUfrA3-aLajEfUpZbBR-wbirUXBMq0jH5-VPWkVk7LtZVH_sUajV30WKPv_OASwY-CGTI
+
+
+
+server xml::
+
+
+<Connector port="9052" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+    <!-- A "Connector" using the shared thread pool-->
+    <!--
+    <Connector executor="tomcatThreadPool"
+               port="8080" protocol="HTTP/1.1"
+               connectionTimeout="20000"
+               redirectPort="8443" />
+    -->
+    <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443
+         This connector uses the NIO implementation. The default
+         SSLImplementation will depend on the presence of the APR/native
+         library and the useOpenSSL attribute of the
+         AprLifecycleListener.
+         Either JSSE or OpenSSL style configuration may be used regardless of
+         the SSLImplementation selected. JSSE style configuration is used below.
+    -->
+    <!--
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11NioProtocol"
+               maxThreads="150" SSLEnabled="true">
+        <SSLHostConfig>
+            <Certificate certificateKeystoreFile="conf/localhost-rsa.jks"
+                         type="RSA" />
+        </SSLHostConfig>
+    </Connector>
+    -->
+    <!-- Define a SSL/TLS HTTP/1.1 Connector on port 8443 with HTTP/2
+         This connector uses the APR/native implementation which always uses
+         OpenSSL for TLS.
+         Either JSSE or OpenSSL style configuration may be used. OpenSSL style
+         configuration is used below.
+    -->
+    <!--
+    <Connector port="8443" protocol="org.apache.coyote.http11.Http11AprProtocol"
+               maxThreads="150" SSLEnabled="true" >
+        <UpgradeProtocol className="org.apache.coyote.http2.Http2Protocol" />
+        <SSLHostConfig>
+            <Certificate certificateKeyFile="conf/localhost-rsa-key.pem"
+                         certificateFile="conf/localhost-rsa-cert.pem"
+                         certificateChainFile="conf/localhost-rsa-chain.pem"
+                         type="RSA" />
+        </SSLHostConfig>
+    </Connector>
+    -->
+
+    <!-- Define an AJP 1.3 Connector on port 8009 -->
+    <Connector port="9054" protocol="AJP/1.3" redirectPort="8443" />
+
